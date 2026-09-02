@@ -33,9 +33,6 @@ from pdf_export import generate_pdf_report, get_pdf_filename, is_pdf_export_avai
 # استيراد محرك التصدير Excel
 from excel_export import generate_excel_report, get_excel_filename
 
-# استيراد محرك التصدير CSV
-from csv_export import generate_csv_report, get_csv_filename
-
 
 
 # تهيئة الجلسة
@@ -266,9 +263,7 @@ def _render_analysis_results():
     with export_cols[1]:
         if st.button("📊 تصدير Excel", use_container_width=True):
             _handle_excel_export()
-    with export_cols[2]:
-        if st.button("📁 تصدير CSV", use_container_width=True):
-            _handle_csv_export()
+    
     with export_cols[3]:
         if st.button("🔄 تحليل ملف جديد", use_container_width=True):
             reset_state()
@@ -444,29 +439,6 @@ def _handle_excel_export():
     else:
         st.error("❌ حدث خطأ أثناء إنشاء الملف")
 
-
-
-def _handle_csv_export():
-    analysis_data = {
-        "financial_ratios": get_state("financial_ratios", {}),
-        "health_score": get_state("health_score", {}),
-    }
-
-    csv_content = generate_csv_report(
-        analysis_data,
-        get_state("mapped_data", {}),
-        get_state("periods", []),
-    )
-
-    if csv_content:
-        filename = get_csv_filename(get_state("company_name", ""), get_state("periods", []))
-        st.download_button(
-            "⬇️ تحميل CSV",
-            data=csv_content.encode('utf-8-sig'),
-            file_name=filename,
-            mime="text/csv",
-        )
-        st.success("✅ تم إنشاء ملف CSV بنجاح")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
